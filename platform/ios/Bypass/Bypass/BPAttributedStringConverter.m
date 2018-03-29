@@ -375,10 +375,19 @@ NSString *const BPLinkStyleAttributeName = @"NSLinkAttributeName";
         NSFontAttributeName            : [_displaySettings monospaceFont],
         NSForegroundColorAttributeName : bulletColor
     };
-    
-    NSAttributedString *attributedBullet;
-    attributedBullet = [[NSAttributedString alloc] initWithString:@"• "
-                                                       attributes:bulletAttributes];
+
+    NSString *bullet = @"• ";
+    NSString *flags = [element.parentElement.attributes objectForKey: @"flags"];
+    if (flags != nil && [flags isEqualToString: @"1"]) {
+        NSUInteger liNumber = 1 + [element.parentElement.childElements indexOfObject: element];
+        bullet = [NSString stringWithFormat: @"%lu. ", (unsigned long)liNumber];
+        bulletAttributes = @{
+            NSFontAttributeName            : [_displaySettings defaultFont],
+            NSForegroundColorAttributeName : [_displaySettings defaultColor]
+        };
+    }
+    NSAttributedString *attributedBullet = [[NSAttributedString alloc] initWithString: bullet
+                                                                           attributes: bulletAttributes];
     [target insertAttributedString:attributedBullet atIndex:effectiveRange.location];
 
     
