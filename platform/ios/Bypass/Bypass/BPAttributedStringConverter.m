@@ -22,6 +22,7 @@
 #import "BPAttributedStringConverter.h"
 #import "BPDisplaySettings.h"
 #import "BPImageGetter.h"
+#include "markdown.h"
 
 NSString *const BPLinkStyleAttributeName = @"NSLinkAttributeName";
 
@@ -377,8 +378,8 @@ NSString *const BPLinkStyleAttributeName = @"NSLinkAttributeName";
     };
 
     NSString *bullet = @"• ";
-    NSString *flags = [element.parentElement.attributes objectForKey: @"flags"];
-    if (flags != nil && [flags isEqualToString: @"1"]) {
+    NSString *flags = element.parentElement[@"flags"];
+    if (flags != nil && ([flags integerValue] & MKD_LIST_ORDERED)) {
         NSUInteger liNumber = 1 + [element.parentElement.childElements indexOfObject: element];
         bullet = [NSString stringWithFormat: @"%lu. ", (unsigned long)liNumber];
         bulletAttributes = @{
